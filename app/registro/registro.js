@@ -11,8 +11,15 @@ angular.module('myApp.registro', ['ngRoute'])
             }])
 
 // Home controller
-        .controller('RegistroCtrl', [function ($scope, $http) {
-                $scope.submitForm = function () {
-                    alert('Nombre: ' + $scope.nombre + ' - Apellido: ' + $scope.apellido);
-                };
-            }]);
+        .controller('RegistroCtrl', function ($scope, $http) {
+            $scope.registrar = function () {
+                $http.post({
+                    method: "POST",
+                    url: "http://localhost:8080/psicoweb/usuarios"
+                }).then(function mySuccess(response) {
+
+                }, function myError(response) {
+
+                });
+            };
+        });
