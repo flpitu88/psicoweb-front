@@ -10,35 +10,12 @@ angular.module('myApp.registro', ['ngRoute'])
                 });
             }])
 
-// Home controller
-        .controller('RegistroCtrl', function ($scope, $http) {
-
-            $scope.registrar = function () {
-
-//                var parameter = JSON.stringify(
-//                        {type: "Usuario",
-//                            nombre: $scope.nombre,
-//                            apellido: $scope.apellido,
-//                            dni: $scope.dni,
-//                            email: $scope.email,
-//                            password: $scope.password
-//                        });
-
-                var jsonDatos = "'nombre':'flavio','apellido':'pietrolati','dni':324324,'email':'asdasd@gsg','password':'234234'";
-
-                var postConfig = {
-                    headers: {
-                        "MYAPP-DOMAIN": "http://localhost:8000",
-                        'Content-Type': 'application/json; charset=UTF-8'
-                    },
-                    withCredentials: true
-                };
-
+        // Servicio rest para enviar datos al formulario
+        .service('registroService', function ($http) {
+            this.mandarRegistro = function () {
                 $http.post(
-                        'http://localhost:8080/psicoweb-server/usuarios',
-//                        parameter,
-                        jsonDatos,
-                        postConfig).
+                        'http://localhost:9090/psicoweb-server/usuarios',
+                        'hola').
                         success(function (data, status, headers, config) {
                             // this callback will be called asynchronously
                             // when the response is available
@@ -47,8 +24,20 @@ angular.module('myApp.registro', ['ngRoute'])
                         error(function (data, status, headers, config) {
                             // called asynchronously if an error occurs
                             // or server returns response with an error status.
-                            console.log(data);
+                            console.log(status + '-' + data);
                         });
-
             };
+        })
+
+// Home controller
+        .controller('RegistroCtrl', function ($scope, registroService) {
+
+            var self = this;
+
+            this.postearRegistro = function () {
+                registroService.mandarRegistro(function (response) {
+                    self.respuesta = response.data;
+                });
+            };
+
         });
